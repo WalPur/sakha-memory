@@ -1,12 +1,23 @@
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 
-from articles.api.v1.serializers import PageSerializer
+from articles.api.v1.serializers import PageDetailSerializer, PageSerializer
 from articles.models import Page
 
 
-class PageViewSet(GenericViewSet, ListModelMixin):
+class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """Получение страниц разделов"""
 
-    queryset = Page.objects.filter(parent=None)
+    queryset = Page.objects.all()
     serializer_class = PageSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.action == "retrieve":
+            return qs
+        return qs.filter(parent=None)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return PageDetailSerializer
+        return super().get_serializer_class()
