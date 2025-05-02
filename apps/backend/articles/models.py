@@ -1,3 +1,4 @@
+from ckeditor.fields import RichTextField
 from django.db import models
 
 from articles.choices import PageTypes
@@ -17,7 +18,7 @@ class Page(models.Model):
         help_text="Если его нет, то берется родительское изображение",
     )
     name = models.TextField("Название", blank=True)
-    content = models.TextField("Содержимое", blank=True)
+    content = RichTextField("Содержимое", blank=True)
     depth = models.PositiveIntegerField("Глубина страницы", blank=True, default=0)
 
     def save(self):

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
+    "ckeditor",
     "articles",
 ]
 
@@ -118,6 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static/"
+# CKEDITOR_BASEPATH = BASE_DIR / "static/ckeditor/ckeditor/"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "media/"
 
