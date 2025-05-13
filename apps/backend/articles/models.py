@@ -19,16 +19,22 @@ class Page(models.Model):
     )
     name = models.TextField("Название", blank=True)
     content = RichTextField("Содержимое", blank=True)
-    depth = models.PositiveIntegerField("Глубина страницы", blank=True, default=0)
+    depth = models.PositiveIntegerField(
+        "Глубина страницы",
+        blank=True,
+        default=0,
+        help_text="Необходим для построения области навигации",
+    )
+    original_url = models.TextField("Ссылка на оригинальную страницу")
 
-    def save(self):
+    def save(self, *args, **kwargs):
         depth = 0
         current = self
         while current.parent is not None:
             depth += 1
             current = current.parent
         self.depth = depth
-        return super().save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} | {self.type}"
