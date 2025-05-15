@@ -25,7 +25,7 @@ class Page(models.Model):
         default=0,
         help_text="Необходим для построения области навигации",
     )
-    original_url = models.TextField("Ссылка на оригинальную страницу")
+    original_url = models.TextField("Ссылка на оригинальную страницу", default="")
 
     def save(self, *args, **kwargs):
         depth = 0
