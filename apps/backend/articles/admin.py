@@ -26,5 +26,7 @@ class PageAdminForm(forms.ModelForm):
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "parent", "depth"]
+    list_filter = ["type"]
+    search_fields = ["name"]
     inlines = [FileInline, PageChildren]
     form = PageAdminForm

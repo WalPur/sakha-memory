@@ -1,5 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.utils import timezone
 
 from articles.choices import PageTypes
 
@@ -26,6 +27,9 @@ class Page(models.Model):
         help_text="Необходим для построения области навигации",
     )
     original_url = models.TextField("Ссылка на оригинальную страницу", default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def save(self, *args, **kwargs):
         depth = 0

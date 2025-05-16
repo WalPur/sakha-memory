@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     file_path = ""
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser) -> None:
         parser.add_argument("file_path", nargs="+", type=str)
 
     def _get_file(self) -> list:
@@ -43,15 +43,29 @@ class Command(BaseCommand):
         with open(self.file_path, "r", encoding="utf-8") as file:
             return json.load(file)
 
+    def _get_parent(self, url: str) -> Page|None:
+        """Получение родительской страницы"""
+        path = url.split("/")
+        while len(path) != 0:
+            path.pop(-1)
+            page = Page.objects.filter(original_url="/".join(path))
+            if page.count() > 1:
+                print("Родителей больше 1", url)
+            if page.exists():
+                return page.first()
+        return None
+
     def handle(self, *args, **options):
         Page.objects.all().delete()
         self.file_path = options["file_path"][0]
         data = self._get_file()
         for item in data:
             page = Page.objects.create(
+                parent=self._get_parent(item.get("url")),
                 name=item.get("name"),
                 content=item.get("content_html", ""),
                 original_url=item.get("url"),
+                type=item.get("type"),
             )
             for file_data in item["files"]:
                 file_path = file_data.get("path")
