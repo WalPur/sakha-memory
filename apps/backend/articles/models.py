@@ -1,14 +1,15 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils import timezone
+from treenode.models import TreeNodeModel
 
 from articles.choices import PageTypes
 
 
-class Page(models.Model):
-    parent = models.ForeignKey(
-        "self", models.CASCADE, related_name="children", blank=True, null=True
-    )
+class Page(TreeNodeModel):
+    # parent = models.ForeignKey(
+    #     "self", models.CASCADE, related_name="children", blank=True, null=True
+    # )
     type = models.CharField(
         "Тип страницы", choices=PageTypes.choices, default=PageTypes.PAGE
     )
@@ -29,7 +30,6 @@ class Page(models.Model):
     original_url = models.TextField("Ссылка на оригинальную страницу", default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def save(self, *args, **kwargs):
         depth = 0

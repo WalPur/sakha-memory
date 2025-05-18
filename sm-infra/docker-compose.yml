@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  sm_database:
+    image: postgres:15.2-alpine
+    restart: always
+    env_file:
+      - services/postgresql/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.data/pg/mount:/var/lib/postgresql/data
+  sm_backend:
+    build:
+      context: ../apps/backend
+    restart: always
+    command: gunicorn --config src/gunicorn_conf.py src.wsgi:application
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./.data/static:/static
+      - ./.data/media:/media
+      - ../apps/backend:/code
+    env_file:
+      - services/postgresql/.env
+      - apps/backend/.env
+    depends_on:
+      - sm_database
+  sm_redis:
+    image: redis
+    restart: always
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "8050:8050" # Внешний порт для Nginx
+    volumes:
+      - ./services/nginx/default.conf:/etc/nginx/nginx.conf
+      - ./.data/static:/static
+      - ./.data/media:/media
+    depends_on:
+      - sm_backend

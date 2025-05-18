@@ -1,22 +1,15 @@
-from rest_framework import serializers
-
 from articles.models import Page, PageFile
+from articles.selectors import get_children_recursive
+from drf_spectacular.utils import extend_schema_field
+from rest_framework import serializers
 
 
 class PageSerializer(serializers.ModelSerializer):
-    children = serializers.SerializerMethodField()
     cover_img = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
         fields = "__all__"
-
-    def get_children(self, instance: Page):
-        return PageSerializer(
-            instance.children.all(),
-            many=True,
-            context=self.context,
-        ).data
 
     def get_cover_img(self, instance: Page):
         request = self.context.get("request")
@@ -25,8 +18,7 @@ class PageSerializer(serializers.ModelSerializer):
         while current_instance is not None:
             if current_instance.cover_img:
                 return request.build_absolute_uri(current_instance.cover_img.url)
-            current_instance = current_instance.parent
-
+            current_instance = current_instance.tn_parent
         return None
 
 
@@ -36,5 +28,52 @@ class PageFileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class PageBreadcrumbSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+
+class PageNavigationLevel3Serializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    children = serializers.ListSerializer(child=serializers.DictField(), required=False)
+
+
+class PageNavigationLevel2Serializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    children = PageNavigationLevel3Serializer(many=True)
+
+
+class PageNavigationLevel1Serializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    children = PageNavigationLevel2Serializer(many=True)
+
+
 class PageDetailSerializer(PageSerializer):
     files = PageFileSerializer(many=True)
+    breadcrumb = serializers.SerializerMethodField()
+    navigation = serializers.SerializerMethodField()
+
+    @extend_schema_field(PageNavigationLevel1Serializer)
+    def get_navigation(self, instance: Page):
+        categories = Page.objects.filter(type="CATEGORY")
+        navigation = []
+        for category in categories:
+            category_data = {
+                "id": category.id,
+                "name": category.name,
+                "children": get_children_recursive(category, depth=1),
+            }
+            navigation.append(category_data)
+        return navigation
+
+    @extend_schema_field(PageBreadcrumbSerializer(many=True))
+    def get_breadcrumb(self, instance: Page):
+        parent = instance.tn_parent
+        breadcrumb = [{"id": instance.id, "title": instance.name}]
+        while parent is not None:
+            breadcrumb.append({"id": parent.id, "title": parent.name})
+            parent = parent.tn_parent
+        return breadcrumb

@@ -1,8 +1,7 @@
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
-from rest_framework.viewsets import GenericViewSet
-
 from articles.api.v1.serializers import PageDetailSerializer, PageSerializer
 from articles.models import Page
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+from rest_framework.viewsets import GenericViewSet
 
 
 class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
@@ -15,7 +14,7 @@ class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         qs = super().get_queryset()
         if self.action == "retrieve":
             return qs
-        return qs.filter(parent=None)
+        return qs.filter(tn_parent=None)
 
     def get_serializer_class(self):
         if self.action == "retrieve":

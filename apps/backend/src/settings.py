@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+import environ
+
+env = environ.Env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-vsjdt#vl34=0urst)4*5(w$ne4kl38=j*%e&_@&@)spt^fa#yk"
+SECRET_KEY = env("SECRET_KEY", default="django-insecure")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "your-ip-or-domain"]
 
 
 # Application definition
@@ -40,10 +45,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "ckeditor",
+    "treenode",
     "articles",
 ]
 
 MIDDLEWARE = [
+    "src.debug_middleware.PrintHeadersMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -52,6 +59,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CSRF_TRUSTED_ORIGINS = env(
+    "CSRF_TRUSTED_ORIGINS", default="http://localhost:8050"
+).split()
 
 ROOT_URLCONF = "src.urls"
 
@@ -72,14 +83,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "src.wsgi.application"
 
+USE_X_FORWARDED_HOST = True
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": env("POSTGRES_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": env("POSTGRES_DB", default="db.sqlite3"),
+        "USER": env("POSTGRES_USER", default="admin"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="default_pass"),
+        "HOST": env("POSTGRES_HOST", default="postgresql"),
+        "PORT": env("POSTGRES_PORT", default=5432),
     }
 }
 
@@ -119,10 +138,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static/"
+STATIC_ROOT = "/static"
+# STATIC_ROOT = "static/"
 # CKEDITOR_BASEPATH = BASE_DIR / "static/ckeditor/ckeditor/"
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "media/"
+MEDIA_ROOT = "/media"
+# MEDIA_ROOT = "media"
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -136,7 +157,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Your Project API",
+    "TITLE": "Sakha Memory API",
     "DESCRIPTION": "Your project description",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,

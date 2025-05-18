@@ -1,8 +1,9 @@
+from articles.models import Page, PageFile
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib import admin
-
-from articles.models import Page, PageFile
+from treenode.admin import TreeNodeModelAdmin
+from treenode.forms import TreeNodeForm
 
 
 class FileInline(admin.TabularInline):
@@ -10,12 +11,7 @@ class FileInline(admin.TabularInline):
     extra = 0
 
 
-class PageChildren(admin.TabularInline):
-    model = Page
-    extra = 0
-
-
-class PageAdminForm(forms.ModelForm):
+class PageAdminForm(TreeNodeForm):
     content = forms.CharField(widget=CKEditorWidget())
 
     class Meta:
@@ -24,9 +20,11 @@ class PageAdminForm(forms.ModelForm):
 
 
 @admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "parent", "depth"]
+class PageAdmin(TreeNodeModelAdmin):
+    list_display = ["name", "depth"]
     list_filter = ["type"]
     search_fields = ["name"]
-    inlines = [FileInline, PageChildren]
+    inlines = [FileInline]
     form = PageAdminForm
+
+    treenode_display_mode = TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_ACCORDION

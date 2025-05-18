@@ -3,7 +3,7 @@ import os
 
 from django.conf import settings
 from django.core.files import File
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from articles.models import Page, PageFile
 
@@ -43,7 +43,7 @@ class Command(BaseCommand):
         with open(self.file_path, "r", encoding="utf-8") as file:
             return json.load(file)
 
-    def _get_parent(self, url: str) -> Page|None:
+    def _get_parent(self, url: str) -> Page | None:
         """Получение родительской страницы"""
         path = url.split("/")
         while len(path) != 0:
@@ -61,7 +61,7 @@ class Command(BaseCommand):
         data = self._get_file()
         for item in data:
             page = Page.objects.create(
-                parent=self._get_parent(item.get("url")),
+                tn_parent=self._get_parent(item.get("url")),
                 name=item.get("name"),
                 content=item.get("content_html", ""),
                 original_url=item.get("url"),
