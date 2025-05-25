@@ -43,16 +43,18 @@ class Command(BaseCommand):
         with open(self.file_path, "r", encoding="utf-8") as file:
             return json.load(file)
 
-    def _get_parent(self, url: str) -> Page | None:
+    def _get_parent(self, url: str, original_parent: str) -> Page | None:
         """Получение родительской страницы"""
+        if original_parent is not None:
+            url = original_parent
         path = url.split("/")
         while len(path) != 0:
-            path.pop(-1)
             page = Page.objects.filter(original_url="/".join(path))
             if page.count() > 1:
                 print("Родителей больше 1", url)
             if page.exists():
                 return page.first()
+            path.pop(-1)
         return None
 
     def handle(self, *args, **options):
@@ -61,7 +63,9 @@ class Command(BaseCommand):
         data = self._get_file()
         for item in data:
             page = Page.objects.create(
-                tn_parent=self._get_parent(item.get("url")),
+                tn_parent=self._get_parent(
+                    item.get("url"), item.get("original_parent")
+                ),
                 name=item.get("name"),
                 content=item.get("content_html", ""),
                 original_url=item.get("url"),
