@@ -9,7 +9,14 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
-        fields = "__all__"
+        fields = [
+            "type",
+            "cover_img",
+            "name",
+            "content",
+            "depth",
+            "original_url",
+        ]
 
     def get_cover_img(self, instance: Page):
         request = self.context.get("request")
@@ -54,20 +61,19 @@ class PageNavigationLevel1Serializer(serializers.Serializer):
 class PageDetailSerializer(PageSerializer):
     files = PageFileSerializer(many=True)
     breadcrumb = serializers.SerializerMethodField()
-    navigation = serializers.SerializerMethodField()
 
-    @extend_schema_field(PageNavigationLevel1Serializer)
-    def get_navigation(self, instance: Page):
-        categories = Page.objects.filter(type="CATEGORY")
-        navigation = []
-        for category in categories:
-            category_data = {
-                "id": category.id,
-                "name": category.name,
-                "children": get_children_recursive(category, depth=1),
-            }
-            navigation.append(category_data)
-        return navigation
+    class Meta:
+        model = Page
+        fields = [
+            "type",
+            "cover_img",
+            "name",
+            "content",
+            "depth",
+            "original_url",
+            "files",
+            "breadcrumb",
+        ]
 
     @extend_schema_field(PageBreadcrumbSerializer(many=True))
     def get_breadcrumb(self, instance: Page):

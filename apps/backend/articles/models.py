@@ -1,15 +1,10 @@
+from articles.choices import PageTypes
 from ckeditor.fields import RichTextField
 from django.db import models
-from django.utils import timezone
 from treenode.models import TreeNodeModel
-
-from articles.choices import PageTypes
 
 
 class Page(TreeNodeModel):
-    # parent = models.ForeignKey(
-    #     "self", models.CASCADE, related_name="children", blank=True, null=True
-    # )
     type = models.CharField(
         "Тип страницы", choices=PageTypes.choices, default=PageTypes.PAGE
     )
