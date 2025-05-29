@@ -54,10 +54,8 @@ class PageDetailSerializer(PageSerializer):
         model = Page
         fields = [
             "type",
-            "cover_img",
             "name",
             "content",
-            "depth",
             "original_url",
             "files",
             "breadcrumb",
