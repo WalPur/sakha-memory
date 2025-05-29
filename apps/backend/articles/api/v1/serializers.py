@@ -1,32 +1,20 @@
-from articles.models import Page, PageFile
-from articles.selectors import get_children_recursive
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from articles.models import Page, PageFile
+from articles.selectors import get_children_recursive
+
 
 class PageSerializer(serializers.ModelSerializer):
-    cover_img = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
         fields = [
             "type",
-            "cover_img",
             "name",
             "content",
-            "depth",
             "original_url",
         ]
-
-    def get_cover_img(self, instance: Page):
-        request = self.context.get("request")
-        current_instance = instance
-
-        while current_instance is not None:
-            if current_instance.cover_img:
-                return request.build_absolute_uri(current_instance.cover_img.url)
-            current_instance = current_instance.tn_parent
-        return None
 
 
 class PageFileSerializer(serializers.ModelSerializer):

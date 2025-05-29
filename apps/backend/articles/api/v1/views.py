@@ -1,17 +1,19 @@
 import urllib
 
-from articles.api.v1.serializers import (
-    PageDetailSerializer,
-    PageNavigationLevel1Serializer,
-    PageSerializer,
-)
-from articles.models import Page
-from articles.selectors import get_children_recursive
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+
+from articles.api.v1.serializers import (
+    PageDetailSerializer,
+    PageNavigationLevel1Serializer,
+    PageSerializer,
+)
+from articles.filters import PageFilter
+from articles.models import Page
+from articles.selectors import get_children_recursive
 
 
 class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
@@ -19,12 +21,7 @@ class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 
     queryset = Page.objects.all()
     serializer_class = PageSerializer
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if self.action == "retrieve":
-            return qs
-        return qs.filter(tn_parent=None)
+    filterset_class = PageFilter
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -33,7 +30,7 @@ class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 
     def get_object(self):
         lookup_value = self.kwargs.get(self.lookup_field, None)
-        lookup_value = urllib.parse.unquote(lookup_value)  # декодируем URL
+        lookup_value = urllib.parse.unquote(lookup_value)
 
         obj = Page.objects.filter(original_url=lookup_value)
         if obj.count() == 0:
