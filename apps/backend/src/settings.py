@@ -31,6 +31,15 @@ DEBUG = env("DEBUG", default=False)
 
 ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "your-ip-or-domain"]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED", default="http://localhost:3030").split()
+CORS_ALLOWED_ORIGIN_REGEXES = env(
+    "CORS_ALLOWED", default="http://localhost:3030"
+).split()
+CORS_ORIGIN_WHITELIST = env("CORS_ALLOWED", default="http://localhost:3030").split()
+CSRF_TRUSTED_ORIGINS = env("CORS_ALLOWED", default="http://localhost:3030").split()
 
 
 # Application definition
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "drf_spectacular",
     "django_filters",
