@@ -30,16 +30,12 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure")
 DEBUG = env("DEBUG", default=False)
 
 ALLOWED_HOSTS = ["*"]
-# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "your-ip-or-domain"]
+
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED", default="http://localhost:3030").split()
-CORS_ALLOWED_ORIGIN_REGEXES = env(
-    "CORS_ALLOWED", default="http://localhost:3030"
-).split()
-CORS_ORIGIN_WHITELIST = env("CORS_ALLOWED", default="http://localhost:3030").split()
-CSRF_TRUSTED_ORIGINS = env("CORS_ALLOWED", default="http://localhost:3030").split()
+CORS_ALLOW_CREDENTIALS = False
+CSRF_TRUSTED_ORIGINS = [
+    "http://45.82.152.209:3000", "http://45.82.152.209:8000", "http://45.82.152.209:8050"
+]
 
 
 # Application definition
@@ -61,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -69,10 +66,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-CSRF_TRUSTED_ORIGINS = env(
-    "CSRF_TRUSTED_ORIGINS", default="http://localhost:8050"
-).split()
 
 ROOT_URLCONF = "src.urls"
 
@@ -95,7 +88,7 @@ WSGI_APPLICATION = "src.wsgi.application"
 
 USE_X_FORWARDED_HOST = True
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+#SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
 
 
 # Database

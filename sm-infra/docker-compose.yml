@@ -40,3 +40,8 @@ services:
       - ./.data/media:/media
     depends_on:
       - sm_backend
+  frontend:
+    build:
+      context: ../apps/frontend
+    ports:
+      - "3000:80"
