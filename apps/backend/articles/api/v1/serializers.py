@@ -10,6 +10,7 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = [
+            "id",
             "type",
             "name",
             "content",
@@ -54,6 +55,7 @@ class PageDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = [
+            "id",
             "type",
             "name",
             "content",
