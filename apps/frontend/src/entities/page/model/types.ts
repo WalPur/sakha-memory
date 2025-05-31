@@ -1,6 +1,8 @@
 // import { SubscriptionPlanLiteral } from "@/shared/api";
 
 export interface IPage {
+    id: Int16Array,
+    children: Page[];
     type: PageTypeLiteral;
     name: string;
     content: string;
@@ -18,6 +20,14 @@ export type PageTypeLiteral =
     | "VIDEO"
     | "BOOK_CATEGORY"
     | "BOOK";
+
+export type Page = {
+    id: number;
+    type: PageTypeLiteral,
+    name: string,
+    content: string,
+    original_url: string
+};
 
 export type FileType = {
     id: number;
