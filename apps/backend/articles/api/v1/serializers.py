@@ -46,9 +46,10 @@ class PageNavigationLevel1Serializer(serializers.Serializer):
     children = PageNavigationLevel2Serializer(many=True)
 
 
-class PageDetailSerializer(PageSerializer):
+class PageDetailSerializer(serializers.ModelSerializer):
     files = PageFileSerializer(many=True)
     breadcrumb = serializers.SerializerMethodField()
+    children = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
@@ -59,6 +60,7 @@ class PageDetailSerializer(PageSerializer):
             "original_url",
             "files",
             "breadcrumb",
+            "children",
         ]
 
     @extend_schema_field(PageBreadcrumbSerializer(many=True))
@@ -69,3 +71,8 @@ class PageDetailSerializer(PageSerializer):
             breadcrumb.append({"id": parent.id, "title": parent.name})
             parent = parent.tn_parent
         return breadcrumb
+
+    @extend_schema_field(PageSerializer(many=True))
+    def get_children(self, instance: Page):
+        children = instance.get_children()
+        return PageSerializer(children, many=True).data
