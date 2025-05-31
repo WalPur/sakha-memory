@@ -1,0 +1,12 @@
+.footer {
+    background-color: #416691;
+    padding: 33px 0;
+}
+.content {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: fit-content;
+    text-align: center;
+}

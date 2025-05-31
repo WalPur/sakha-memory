@@ -1,0 +1,29 @@
+.header {
+    background-color: #fff;
+    padding: 20px 0;
+    color: #000;
+}
+.content {
+    max-width: 1440px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.nav-item {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+    color: #555;
+    font-size: 16px;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.nav-item:hover {
+    color: #4998f2;
+    span {
+        transform: scale(1.2);
+    }
+}
