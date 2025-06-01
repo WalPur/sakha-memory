@@ -26,6 +26,7 @@ const MainPage = () => {
                             fontSize: "36px",
                             fontWeight: 400,
                             margin: 0,
+                            color: "white"
                         }}
                     >
                         Ваша дверь в Память Якутии
@@ -36,6 +37,7 @@ const MainPage = () => {
                             maxWidth: "790px",
                             fontWeight: 500,
                             margin: 0,
+                            color: "white"
                         }}
                     >
                         Портал «Память Якутии» - это информационный продукт, результат реализации программы «Память

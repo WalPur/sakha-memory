@@ -8,89 +8,118 @@ import ArrowDownIcon from "@/shared/icons/ArrowDownIcon";
 import { ROUTES } from "@/shared/constants";
 
 const Layout = () => {
-    const { data } = useGetNavigationQuery();
+  const { data } = useGetNavigationQuery();
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const showDrawer = () => {
-        setOpen(true);
-    };
+  const [activeSection, setActiveSection] = useState<INavigation | null>(null);
 
-    const onClose = () => {
-        setOpen(false);
-    };
-    const Navi = ({ tree }: { tree: INavigation }) => {
-        return (
-            <div style={{ paddingLeft: 10 }}>
-                <Link onClick={onClose} to={`${ROUTES.PAGE}/${tree.id}`} style={{ width: "fit-content" }}>
-                    {tree.name}
-                </Link>
-                {tree?.children?.map((child) => {
-                    return (
-                        <div style={{ paddingLeft: 10, margin: "4px 0" }}>
-                            <Navi tree={child} />
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
+  const onClose = () => {
+    setOpen(false);
+  };
+  const Navi = ({ tree }: { tree: INavigation }) => {
     return (
-        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-            <div className={styles.header}>
-                <div className={styles.content}>
-                    <Link to={ROUTES.MAIN}>
-                        <img src="/logo.svg" />
-                    </Link>
-                    <Row>
-                        {data?.map((item) => (
-                            <Col span={6} key={item.id} className={styles["nav-item"]} onMouseEnter={showDrawer}>
-                                <span>
-                                    <ArrowDownIcon />
-                                </span>
-                                {item.name}
-                            </Col>
-                        ))}
-                    </Row>
-                </div>
+      <Flex vertical style={{ paddingLeft: 10, minWidth: "200px" }}>
+        <Link
+          onClick={onClose}
+          to={`${ROUTES.PAGE}/${tree.id}`}
+          style={{ maxWidth: "200px" }}
+        >
+          {tree.name}
+        </Link>
+        {tree?.children?.map((child) => {
+          return (
+            <div style={{ paddingLeft: 10, margin: "4px 0" }}>
+              <Navi tree={child} />
             </div>
-            <div style={{ flex: 1, position: "relative", overflow: "hidden", background: "#E0E8F0" }}>
-                <Drawer
-                    placement="top"
-                    closable={false}
-                    onClose={onClose}
-                    open={open}
-                    getContainer={false}
-                    height={"500px"}
-                    styles={{ body: { background: "#fff", color: "#000", padding: 0 } }}
-                >
-                    <div
-                        style={{
-                            background: "#fff",
-                            maxWidth: "1400px",
-                            margin: "auto",
-                        }}
-                    >
-                        <Row gutter={16}>
-                            {data &&
-                                data.map((item) => (
-                                    <Col span={6} key={item.id}>
-                                        {item.children?.map((citem) => (
-                                            <Flex vertical gap={4} key={citem.id}>
-                                                <Navi tree={citem} />
-                                            </Flex>
-                                        ))}
-                                    </Col>
-                                ))}
-                        </Row>
-                    </div>
-                </Drawer>
-                <Outlet />
-            </div>
-            <Footer />
-        </div>
+          );
+        })}
+      </Flex>
     );
+  };
+
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
+      <div className={styles.header}>
+        <div className={styles.content}>
+          <Link to={ROUTES.MAIN} onClick={() => setOpen(false)}>
+            <img src="/logo.svg" />
+          </Link>
+          <Flex className={styles["nav-list"]} wrap gap={16}>
+            {data?.map((item) => (
+              <div
+                key={item.id}
+                className={`${styles["nav-item"]} ${
+                  activeSection?.id === item.id && open
+                    ? styles["nav-item-active"]
+                    : ""
+                }`}
+                onClick={() => {
+                  if (activeSection == item || !open) {
+                    setOpen(!open);
+                  }
+                  setActiveSection(item);
+                }}
+              >
+                <span
+                  className={`${styles.arrowIcon} ${
+                    activeSection?.id === item.id && open ? styles.rotated : ""
+                  }`}
+                >
+                  <ArrowDownIcon />
+                </span>
+                {item.name}
+              </div>
+            ))}
+          </Flex>
+        </div>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          position: "relative",
+          overflow: "hidden",
+          background: "#E0E8F0",
+        }}
+      >
+        <Drawer
+          placement="top"
+          closable={false}
+          onClose={onClose}
+          open={open}
+          getContainer={false}
+          // height={"500px"}
+          styles={{
+            body: {
+              background: "#fff",
+              color: "#000",
+              padding: 0,
+            },
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              maxWidth: "1400px",
+              margin: "auto",
+            }}
+          >
+            <Row>
+              {activeSection?.children?.map((item) => (
+                <Col key={item.id} flex="auto">
+                  <Navi tree={item} />
+                </Col>
+              ))}
+            </Row>
+          </div>
+        </Drawer>
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default Layout;
