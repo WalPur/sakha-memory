@@ -36,9 +36,18 @@ const PagePage = () => {
             </ul>
           ) : data.type === "GALLERY" ? (
             <div>
-              {data.files?.map((item) => (
-                <Image key={item.id} width={200} src={item.file} />
-              ))}
+              <Image.PreviewGroup
+                preview={{
+                  onChange: (current, prev) =>
+                    console.log(
+                      `current index: ${current}, prev index: ${prev}`
+                    ),
+                }}
+              >
+                {data.files?.map((item) => (
+                  <Image key={item.id} width={200} src={item.file} />
+                ))}
+              </Image.PreviewGroup>
             </div>
           ) : data.type === "VIDEO" ? (
             <video controls>
@@ -46,7 +55,6 @@ const PagePage = () => {
               Your browser does not support the video tag.
             </video>
           ) : data.type === "BOOK" ? (
-            // <div dangerouslySetInnerHTML={{ __html: data.content }} />
             <iframe src={data.files[0].file} title={data.name} />
           ) : (
             <div dangerouslySetInnerHTML={{ __html: data.content }} />

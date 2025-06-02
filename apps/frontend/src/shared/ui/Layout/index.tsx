@@ -23,7 +23,7 @@ const Layout = () => {
         <Link
           onClick={onClose}
           to={`${ROUTES.PAGE}/${tree.id}`}
-          style={{ maxWidth: "200px" }}
+          className={styles["nav-link"]}
         >
           {tree.name}
         </Link>
@@ -63,14 +63,18 @@ const Layout = () => {
                   setActiveSection(item);
                 }}
               >
-                <span
-                  className={`${styles.arrowIcon} ${
-                    activeSection?.id === item.id && open ? styles.rotated : ""
-                  }`}
-                >
-                  <ArrowDownIcon />
-                </span>
-                {item.name}
+                <div className={styles["nav-item-content"]}>
+                  <span
+                    className={`${styles.arrowIcon} ${
+                      activeSection?.id === item.id && open
+                        ? styles.rotated
+                        : ""
+                    }`}
+                  >
+                    <ArrowDownIcon />
+                  </span>
+                  {item.name}
+                </div>
               </div>
             ))}
           </Flex>
@@ -90,7 +94,6 @@ const Layout = () => {
           onClose={onClose}
           open={open}
           getContainer={false}
-          // height={"500px"}
           styles={{
             body: {
               background: "#fff",

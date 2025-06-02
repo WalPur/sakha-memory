@@ -22,26 +22,20 @@
   display: flex;
   flex: 1 1 auto;
   justify-content: center;
-  gap: 10px;
   cursor: pointer;
   color: #555;
   font-size: 16px;
   font-weight: 500;
-  transition: transform 0.3s ease;
   min-width: 250px;
 }
-@media (max-width: 768px) {
-  .nav-list {
-    flex-direction: column;
-  }
-  .nav-item {
-    justify-content: start;
-    min-width: 0;
-  }
+.nav-item-content {
+  gap: 10px;
+  transition: transform 0.3s ease;
+  display: flex;
 }
 
-.nav-item:hover,
-.nav-item-active {
+.nav-item:hover > .nav-item-content,
+.nav-item-active > .nav-item-content {
   color: #4998f2;
   transform: scale(1.05);
 }
@@ -53,4 +47,21 @@
 
 .rotated {
   transform: rotate(180deg);
+}
+
+.nav-link {
+  max-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .nav-list {
+    flex-direction: column;
+  }
+  .nav-item {
+    justify-content: start;
+    min-width: 0;
+  }
+  .nav-link {
+    max-width: None;
+  }
 }
