@@ -44,7 +44,11 @@ const Layout = () => {
     >
       <div className={styles.header}>
         <div className={styles.content}>
-          <Link to={ROUTES.MAIN} onClick={() => setOpen(false)}>
+          <Link
+            to={ROUTES.MAIN}
+            onClick={() => setOpen(false)}
+            style={{ padding: "0 20px" }}
+          >
             <img src="/logo.svg" />
           </Link>
           <Flex className={styles["nav-list"]} wrap gap={16}>
@@ -106,6 +110,7 @@ const Layout = () => {
             style={{
               background: "#fff",
               maxWidth: "1400px",
+              padding: "20px 0",
               margin: "auto",
             }}
           >

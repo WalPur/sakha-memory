@@ -1,0 +1,60 @@
+.head-section {
+  background-color: #4998f2;
+  height: 372px;
+  background-image: url("ornament.png");
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+
+.head-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  max-width: 1400px;
+  padding: 0 20px;
+  height: 100%;
+  margin: auto;
+}
+
+.head-header {
+  font-size: 36px;
+  font-weight: 400;
+  margin: 0;
+  color: white;
+}
+
+.head-text {
+  font-size: 16px;
+  max-width: 790px;
+  font-weight: 500;
+  margin: 0;
+  color: white;
+}
+
+.main-section {
+  background-color: #fff;
+  padding: 60px 0;
+}
+
+.main-content {
+  max-width: 1400px;
+  padding: 0 20px;
+  height: 100%;
+  margin: auto;
+  color: #000;
+}
+
+.main-header {
+  font-size: 36px;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+@media (max-width: 425px) {
+  .head-section {
+    height: 450px;
+    background-position: left top;
+  }
+}

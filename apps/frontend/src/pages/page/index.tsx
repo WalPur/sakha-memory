@@ -15,7 +15,7 @@ const PagePage = () => {
       style={{
         maxWidth: "1400px",
         margin: "auto",
-        padding: "40px 0 80px 0",
+        padding: "40px 20px 80px 20px",
         color: "#000",
       }}
     >
