@@ -1,5 +1,5 @@
 import { api } from "@/shared/api";
-import type { IPage } from "./types";
+import type { IPage, PagePagination } from "./types";
 
 export const page = api.injectEndpoints({
     endpoints: (build) => ({
@@ -8,7 +8,13 @@ export const page = api.injectEndpoints({
                 url: `pages/${id}/`,
             }),
         }),
+        searchPages: build.query<PagePagination, { search: string; page: number; page_size?: number }>({
+              query: ({ search, page}) => ({
+                url: `pages/`,
+                params: { search, page},
+            }),
+        }),
     }),
 });
 
-export const { useGetPageIdQuery } = page;
+export const { useGetPageIdQuery, useSearchPagesQuery  } = page;

@@ -1,3 +1,4 @@
+import SearchBar from "@/shared/ui/Search";
 import styles from "./style.module.css";
 
 const MainPage = () => {
@@ -17,6 +18,7 @@ const MainPage = () => {
           </p>
         </div>
       </section>
+      <SearchBar searchItem="" />
       <section className={styles["main-section"]}>
         <div className={styles["main-content"]}>
           <h2 className={styles["main-header"]}>Портал «Память Якутии»</h2>

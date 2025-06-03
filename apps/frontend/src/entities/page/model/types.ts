@@ -21,6 +21,13 @@ export type PageTypeLiteral =
     | "BOOK_CATEGORY"
     | "BOOK";
 
+export type PagePagination = {
+    count: number;
+    next: string|null;
+    previous: string|null;
+    results: Page[]
+}
+
 export type Page = {
     id: number;
     type: PageTypeLiteral,
