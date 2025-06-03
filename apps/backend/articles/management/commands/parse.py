@@ -8,28 +8,6 @@ from django.core.management.base import BaseCommand
 from articles.models import Page, PageFile
 
 
-def save_file_to_media(original_path, page):
-    # Получаем имя файла
-    file_name = os.path.basename(original_path)
-
-    # Путь внутри MEDIA_ROOT, например: media/uploads/filename.pdf
-    relative_path = os.path.join("uploads", file_name)
-    full_destination_path = os.path.join(settings.MEDIA_ROOT, relative_path)
-
-    # Убеждаемся, что папка существует
-    os.makedirs(os.path.dirname(full_destination_path), exist_ok=True)
-
-    # Копируем файл вручную в MEDIA_ROOT
-    with open(original_path, "rb") as source_file:
-        with open(full_destination_path, "wb") as dest_file:
-            dest_file.write(source_file.read())
-
-    # Теперь открываем его как Django File и сохраняем
-    with open(full_destination_path, "rb") as f:
-        django_file = File(f)
-        PageFile.objects.create(page=page, file=django_file)
-
-
 class Command(BaseCommand):
     """Парсер для создания объектов базы данных"""
 
@@ -61,6 +39,7 @@ class Command(BaseCommand):
         Page.objects.all().delete()
         self.file_path = options["file_path"][0]
         data = self._get_file()
+        original_url_parse = {}
         for item in data:
             page = Page.objects.create(
                 tn_parent=self._get_parent(
@@ -71,6 +50,7 @@ class Command(BaseCommand):
                 original_url=item.get("url"),
                 type=item.get("type"),
             )
+            original_url_parse[item.get("url")] = page.id
             for file_data in item["files"]:
                 file_path = file_data.get("path")
                 if file_path and os.path.exists(file_path):
