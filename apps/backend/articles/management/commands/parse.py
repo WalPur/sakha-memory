@@ -1,6 +1,7 @@
 import json
 import os
 
+from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
@@ -35,6 +36,16 @@ class Command(BaseCommand):
             path.pop(-1)
         return None
 
+    def _link_pages(self, orignal_url_dict: dict):
+        pages = Page.objects.all()
+        for page in pages:
+            soup = BeautifulSoup(page.content)
+            for anchor in soup.find_all("a"):
+                if anchor.get("href") in orignal_url_dict.keys():
+                    anchor["href"] = orignal_url_dict[anchor.href]
+            page.content = str(soup)
+            page.save()
+
     def handle(self, *args, **options):
         Page.objects.all().delete()
         self.file_path = options["file_path"][0]
@@ -60,3 +71,4 @@ class Command(BaseCommand):
                         PageFile.objects.create(page=page, file=django_file)
                 else:
                     print(f"Файл не найден: {file_path}")
+        self._link_pages(original_url_parse)
