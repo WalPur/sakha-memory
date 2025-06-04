@@ -23,9 +23,7 @@ class Page(TreeNodeModel):
 
 
 def custom_upload_to(instance, filename):
-    ext = filename.split(".")[-1]
-    new_filename = f"{instance.pk}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
-    return os.path.join(instance.page.name, new_filename)
+    return os.path.join(str(instance.page.pk), filename)
 
 
 class PageFile(models.Model):
