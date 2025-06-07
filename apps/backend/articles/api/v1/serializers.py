@@ -6,6 +6,7 @@ from articles.selectors import get_children_recursive
 
 
 class PageSerializer(serializers.ModelSerializer):
+    has_inside_file = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
@@ -13,9 +14,15 @@ class PageSerializer(serializers.ModelSerializer):
             "id",
             "type",
             "name",
+            "has_inside_file",
             "content",
             "original_url",
         ]
+
+    def get_has_inside_file(self, obj):
+        if obj.type in ["BOOK", "AUDIO", "GALLERY", "VIDEO"] and obj.files.count() > 0:
+            return True
+        return False
 
 
 class PageFileSerializer(serializers.ModelSerializer):

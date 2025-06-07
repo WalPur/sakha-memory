@@ -24,9 +24,12 @@ const PagePage = () => {
       ) : (
         <>
           <BreadCrumb items={data.breadcrumb} />
-          {["GALLERY_CATEGORY", "VIDEO_CATEGORY", "BOOK_CATEGORY"].includes(
-            data.type
-          ) ? (
+          {[
+            "GALLERY_CATEGORY",
+            "VIDEO_CATEGORY",
+            "BOOK_CATEGORY",
+            "CATEGORY",
+          ].includes(data.type) ? (
             <ul>
               {data.children?.map((child) => (
                 <li key={child.id}>

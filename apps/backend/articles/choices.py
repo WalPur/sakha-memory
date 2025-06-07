@@ -3,6 +3,7 @@ from django.db import models
 
 class PageTypes(models.TextChoices):
     PAGE = "PAGE", "Страница"
+    SECTION = "SECTION", "Раздел"
     CATEGORY = "CATEGORY", "Категория"
     AUDIO_CATEGORY = "AUDIO_CATEGORY", "Папка аудиоматериалов"
     AUDIO = "AUDIO", "Аудиоматериал"

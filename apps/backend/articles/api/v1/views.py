@@ -44,7 +44,7 @@ class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 
     @action(["GET"], False, serializer_class=PageNavigationLevel1Serializer)
     def navigation(self, request):
-        categories = Page.objects.filter(type="CATEGORY")
+        categories = Page.objects.filter(type="SECTION")
         navigation = []
         for category in categories:
             category_data = {
