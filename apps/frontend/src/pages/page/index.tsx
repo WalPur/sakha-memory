@@ -2,6 +2,7 @@ import { useGetPageIdQuery } from "@/entities/page";
 import BreadCrumb from "@/shared/ui/BreadCrumb";
 import { Loading } from "@/shared/ui/Loading";
 import { Image } from "antd";
+import styles from "./style.module.css";
 import { useParams, Navigate } from "react-router-dom";
 
 const PagePage = () => {
@@ -10,6 +11,15 @@ const PagePage = () => {
   if (id === "1") {
     return <Navigate to="/" replace />;
   }
+  const category_names = [
+    "GALLERY_CATEGORY",
+    "VIDEO_CATEGORY",
+    "BOOK_CATEGORY",
+    "AUDIO_CATEGORY",
+    "CATEGORY",
+    "SECTION",
+  ];
+  const media_names = ["GALLERY", "VIDEO", "BOOK", "AUDIO"];
   return (
     <main
       style={{
@@ -24,16 +34,19 @@ const PagePage = () => {
       ) : (
         <>
           <BreadCrumb items={data.breadcrumb} />
-          {[
-            "GALLERY_CATEGORY",
-            "VIDEO_CATEGORY",
-            "BOOK_CATEGORY",
-            "CATEGORY",
-          ].includes(data.type) ? (
+          <h1>{data.name}</h1>
+          {category_names.includes(data.type) ? (
             <ul>
               {data.children?.map((child) => (
                 <li key={child.id}>
-                  <a href={child.id.toString()}>{child.name}</a>
+                  {(child.has_inside_file &&
+                    media_names.includes(child.type)) ||
+                  child.type === "PAGE" ||
+                  category_names.includes(child.type) ? (
+                    <a href={child.id.toString()}>{child.name}</a>
+                  ) : (
+                    <span>{child.name}</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -53,12 +66,33 @@ const PagePage = () => {
               </Image.PreviewGroup>
             </div>
           ) : data.type === "VIDEO" ? (
-            <video controls>
-              <source src={data.files[0].file} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div className={styles["content-media"]}>
+              {data.files?.map((item) => (
+                <video controls>
+                  <source src={item.file} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ))}
+            </div>
           ) : data.type === "BOOK" ? (
-            <iframe src={data.files[0].file} title={data.name} />
+            <div className={styles["content-media-book"]}>
+              {data.files?.map((item) => (
+                <iframe
+                  className={styles["content-media-book-iframe"]}
+                  src={item.file}
+                  title={data.name}
+                />
+              ))}
+            </div>
+          ) : data.type === "AUDIO" ? (
+            <div className={styles["content-media"]}>
+              {data.files?.map((item) => (
+                <audio controls>
+                  <source src={item.file} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              ))}
+            </div>
           ) : (
             <div dangerouslySetInnerHTML={{ __html: data.content }} />
           )}

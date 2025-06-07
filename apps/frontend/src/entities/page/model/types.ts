@@ -19,7 +19,9 @@ export type PageTypeLiteral =
     | "VIDEO_CATEGORY"
     | "VIDEO"
     | "BOOK_CATEGORY"
-    | "BOOK";
+    | "BOOK"
+    | "AUDIO_CATEGORY"
+    | "AUDIO";
 
 export type PagePagination = {
     count: number;
@@ -32,6 +34,7 @@ export type Page = {
     id: number;
     type: PageTypeLiteral,
     name: string,
+    has_inside_file: boolean,
     content: string,
     original_url: string
 };

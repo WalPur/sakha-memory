@@ -1,0 +1,21 @@
+.content-media {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.content-media video {
+  max-width: 100%;
+  height: auto;
+}
+
+.content-media-book {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 80vh;
+}
+.content-media-book-iframe {
+  height: inherit;
+}
