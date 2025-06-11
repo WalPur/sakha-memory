@@ -34,7 +34,7 @@ const PagePage = () => {
       ) : (
         <>
           <BreadCrumb items={data.breadcrumb} />
-          <h1>{data.name}</h1>
+          {data.type !== "PAGE" ? <h1>{data.name}</h1> : null}
           {category_names.includes(data.type) ? (
             <ul>
               {data.children?.map((child) => (
@@ -51,7 +51,7 @@ const PagePage = () => {
               ))}
             </ul>
           ) : data.type === "GALLERY" ? (
-            <div>
+            <div className={styles["content-media-gallery"]}>
               <Image.PreviewGroup
                 preview={{
                   onChange: (current, prev) =>
@@ -61,7 +61,12 @@ const PagePage = () => {
                 }}
               >
                 {data.files?.map((item) => (
-                  <Image key={item.id} width={200} src={item.file} />
+                  <Image
+                    key={item.id}
+                    width={200}
+                    height={200}
+                    src={item.file}
+                  />
                 ))}
               </Image.PreviewGroup>
             </div>

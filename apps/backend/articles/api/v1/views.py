@@ -1,6 +1,3 @@
-import urllib
-
-from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
@@ -27,20 +24,6 @@ class PageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         if self.action == "retrieve":
             return PageDetailSerializer
         return super().get_serializer_class()
-
-    def get_object(self):
-        lookup_value = self.kwargs.get(self.lookup_field, None)
-        lookup_value = urllib.parse.unquote(lookup_value)
-
-        obj = Page.objects.filter(original_url=lookup_value)
-        if obj.count() == 0:
-            obj = get_object_or_404(Page, pk=lookup_value)
-        else:
-            obj = obj.first()
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    lookup_field = "lookup_value"
 
     @action(["GET"], False, serializer_class=PageNavigationLevel1Serializer)
     def navigation(self, request):

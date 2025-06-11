@@ -29,6 +29,7 @@ class PageAdmin(TreeNodeModelAdmin):
     search_fields = ["name"]
     inlines = [FileInline]
     form = PageAdminForm
+    autocomplete_fields = ["tn_parent"]
 
     treenode_display_mode = TreeNodeModelAdmin.TREENODE_DISPLAY_MODE_ACCORDION
 

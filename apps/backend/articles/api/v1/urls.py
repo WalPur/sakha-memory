@@ -8,5 +8,4 @@ router.register("", PageViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("<str:lookup_value>/", PageViewSet.as_view({"get": "retrieve"})),
 ]

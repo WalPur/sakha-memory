@@ -4,6 +4,11 @@
   gap: 20px;
   height: 100%;
 }
+.content-media-gallery {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 
 .content-media video {
   max-width: 100%;
