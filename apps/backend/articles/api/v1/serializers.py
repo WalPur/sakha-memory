@@ -2,22 +2,33 @@ from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from articles.models import Page, PageFile
-from articles.selectors import get_children_recursive
 
 
 class PageSerializer(serializers.ModelSerializer):
     has_inside_file = serializers.SerializerMethodField()
+    type_label = serializers.SerializerMethodField()
+    elements_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
         fields = [
             "id",
             "type",
+            "type_label",
             "name",
             "has_inside_file",
             "content",
             "original_url",
+            "elements_count",
         ]
+
+    def get_elements_count(self, obj):
+        if obj.type in ["BOOK", "AUDIO", "GALLERY", "VIDEO"]:
+            return obj.files.count()
+        return obj.get_children_count()
+
+    def get_type_label(self, obj):
+        return obj.get_type_display()
 
     def get_has_inside_file(self, obj):
         if obj.type in ["BOOK", "AUDIO", "GALLERY", "VIDEO"] and obj.files.count() > 0:

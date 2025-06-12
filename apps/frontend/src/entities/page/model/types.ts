@@ -4,11 +4,13 @@ export interface IPage {
     id: Int16Array,
     children: Page[];
     type: PageTypeLiteral;
+    type_lable: string;
     name: string;
     content: string;
     original_url: string;
     files: FileType[];
     breadcrumb: BreadCrumbType[];
+    elements_count: number;
 }
 
 export type PageTypeLiteral =

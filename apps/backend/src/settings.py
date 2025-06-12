@@ -27,14 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY", default="django-insecure")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", default=False)
+DEBUG = env("DEBUG", default=True)
 
 ALLOWED_HOSTS = ["*"]
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 CSRF_TRUSTED_ORIGINS = [
-    "http://45.82.152.209:3000", "http://45.82.152.209:8000", "http://45.82.152.209:8050"
+    "http://45.82.152.209:3000",
+    "http://45.82.152.209:8000",
+    "http://45.82.152.209:8050",
 ]
 
 
@@ -88,7 +90,7 @@ WSGI_APPLICATION = "src.wsgi.application"
 
 USE_X_FORWARDED_HOST = True
 
-#SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
 
 
 # Database

@@ -1,7 +1,7 @@
 .head-section {
   background-color: #4998f2;
   height: 372px;
-  background-image: url("ornament.png");
+  background-image: url("/ornament.png");
   background-repeat: no-repeat;
   background-position: right;
 }

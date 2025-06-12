@@ -30,18 +30,15 @@ services:
     image: redis
     restart: always
   nginx:
-    image: nginx:latest
-    restart: always
-    ports:
-      - "8050:8050" # Внешний порт для Nginx
-    volumes:
-      - ./services/nginx/default.conf:/etc/nginx/nginx.conf
-      - ./.data/static:/static
-      - ./.data/media:/media
-    depends_on:
-      - sm_backend
-  frontend:
     build:
       context: ../apps/frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "80:80"
+      - "8050:8050"
+    volumes:
+      - ./.data/static:/static
+      - ./.data/media:/media
+      - ./services/nginx/default.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - sm_backend

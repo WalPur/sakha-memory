@@ -5,12 +5,49 @@ import { Image } from "antd";
 import styles from "./style.module.css";
 import { useParams, Navigate } from "react-router-dom";
 
+import { Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+
 const PagePage = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetPageIdQuery(id!);
   if (id === "1") {
     return <Navigate to="/" replace />;
   }
+  const columns: ColumnsType<any> = [
+    {
+      title: "Наименование",
+      dataIndex: "name",
+      key: "name",
+      render: (_, record) => {
+        const isLink =
+          (record.has_inside_file && media_names.includes(record.type)) ||
+          record.type === "PAGE" ||
+          category_names.includes(record.type);
+
+        return isLink ? (
+          <a href={record.id.toString()}>{record.name}</a>
+        ) : (
+          <span>{record.name}</span>
+        );
+      },
+    },
+    {
+      title: "Тип",
+      dataIndex: "type_label",
+      key: "type",
+      width: 150,
+      responsive: ["sm"],
+    },
+    {
+      title: "Кол-во элементов",
+      dataIndex: "elements_count",
+      key: "elements_count",
+      width: 100,
+      responsive: ["md"],
+    },
+  ];
+
   const category_names = [
     "GALLERY_CATEGORY",
     "VIDEO_CATEGORY",
@@ -36,20 +73,21 @@ const PagePage = () => {
           <BreadCrumb items={data.breadcrumb} />
           {data.type !== "PAGE" ? <h1>{data.name}</h1> : null}
           {category_names.includes(data.type) ? (
-            <ul>
-              {data.children?.map((child) => (
-                <li key={child.id}>
-                  {(child.has_inside_file &&
-                    media_names.includes(child.type)) ||
-                  child.type === "PAGE" ||
-                  category_names.includes(child.type) ? (
-                    <a href={child.id.toString()}>{child.name}</a>
-                  ) : (
-                    <span>{child.name}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            // <ul>
+            //   {data.children?.map((child) => (
+            //     <li key={child.id}>
+            //       {(child.has_inside_file &&
+            //         media_names.includes(child.type)) ||
+            //       child.type === "PAGE" ||
+            //       category_names.includes(child.type) ? (
+            //         <a href={child.id.toString()}>{child.name}</a>
+            //       ) : (
+            //         <span>{child.name}</span>
+            //       )}
+            //     </li>
+            //   ))}
+            // </ul>
+            <Table columns={columns} dataSource={data.children} rowKey="id" />
           ) : data.type === "GALLERY" ? (
             <div className={styles["content-media-gallery"]}>
               <Image.PreviewGroup
