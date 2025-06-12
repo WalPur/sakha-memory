@@ -10,3 +10,4 @@ djangorestframework==3.16.0
 drf-spectacular==0.28.0
 pillow==11.2.1
 psycopg[binary]
+redis==6.2.0
