@@ -37,9 +37,17 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class PageFileSerializer(serializers.ModelSerializer):
+    file = serializers.SerializerMethodField()
+
     class Meta:
         model = PageFile
         fields = "__all__"
+
+    def get_file(self, obj):
+        request = self.context.get("request")
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url
 
 
 class PageBreadcrumbSerializer(serializers.Serializer):
