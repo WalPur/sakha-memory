@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://45.82.152.209:3000",
     "http://45.82.152.209:8000",
     "http://45.82.152.209:8050",
+    "https://backend.xn----7sbzaikt0acj0h8ad.xn--p1ai/",
 ]
 
 
@@ -92,7 +93,7 @@ WSGI_APPLICATION = "src.wsgi.application"
 
 USE_X_FORWARDED_HOST = True
 
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Database
